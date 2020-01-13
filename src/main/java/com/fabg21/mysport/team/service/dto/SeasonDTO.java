@@ -1,7 +1,8 @@
 package com.fabg21.mysport.team.service.dto;
 import java.time.LocalDate;
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -11,14 +12,14 @@ public class SeasonDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
-    private LocalDate debut;
+    private LocalDate start;
 
-    @NotNull
-    private LocalDate fin;
+    private LocalDate end;
 
 
     private Long teamIdId;
+
+    private Set<PlayerDTO> players = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -28,20 +29,20 @@ public class SeasonDTO implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDebut() {
-        return debut;
+    public LocalDate getStart() {
+        return start;
     }
 
-    public void setDebut(LocalDate debut) {
-        this.debut = debut;
+    public void setStart(LocalDate start) {
+        this.start = start;
     }
 
-    public LocalDate getFin() {
-        return fin;
+    public LocalDate getEnd() {
+        return end;
     }
 
-    public void setFin(LocalDate fin) {
-        this.fin = fin;
+    public void setEnd(LocalDate end) {
+        this.end = end;
     }
 
     public Long getTeamIdId() {
@@ -50,6 +51,14 @@ public class SeasonDTO implements Serializable {
 
     public void setTeamIdId(Long teamId) {
         this.teamIdId = teamId;
+    }
+
+    public Set<PlayerDTO> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Set<PlayerDTO> players) {
+        this.players = players;
     }
 
     @Override
@@ -77,8 +86,8 @@ public class SeasonDTO implements Serializable {
     public String toString() {
         return "SeasonDTO{" +
             "id=" + getId() +
-            ", debut='" + getDebut() + "'" +
-            ", fin='" + getFin() + "'" +
+            ", start='" + getStart() + "'" +
+            ", end='" + getEnd() + "'" +
             ", teamId=" + getTeamIdId() +
             "}";
     }

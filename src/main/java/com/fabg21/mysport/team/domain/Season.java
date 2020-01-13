@@ -2,10 +2,11 @@ package com.fabg21.mysport.team.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Season.
@@ -21,16 +22,21 @@ public class Season implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "debut", nullable = false)
-    private LocalDate debut;
+    @Column(name = "start")
+    private LocalDate start;
 
-    @NotNull
-    @Column(name = "fin", nullable = false)
-    private LocalDate fin;
+    @Column(name = "jhi_end")
+    private LocalDate end;
 
     @ManyToOne
+    @JsonIgnoreProperties("seasons")
     private Team teamId;
+
+    @ManyToMany
+    @JoinTable(name = "season_players",
+               joinColumns = @JoinColumn(name = "season_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "players_id", referencedColumnName = "id"))
+    private Set<Player> players = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -41,30 +47,30 @@ public class Season implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDebut() {
-        return debut;
+    public LocalDate getStart() {
+        return start;
     }
 
-    public Season debut(LocalDate debut) {
-        this.debut = debut;
+    public Season start(LocalDate start) {
+        this.start = start;
         return this;
     }
 
-    public void setDebut(LocalDate debut) {
-        this.debut = debut;
+    public void setStart(LocalDate start) {
+        this.start = start;
     }
 
-    public LocalDate getFin() {
-        return fin;
+    public LocalDate getEnd() {
+        return end;
     }
 
-    public Season fin(LocalDate fin) {
-        this.fin = fin;
+    public Season end(LocalDate end) {
+        this.end = end;
         return this;
     }
 
-    public void setFin(LocalDate fin) {
-        this.fin = fin;
+    public void setEnd(LocalDate end) {
+        this.end = end;
     }
 
     public Team getTeamId() {
@@ -78,6 +84,31 @@ public class Season implements Serializable {
 
     public void setTeamId(Team team) {
         this.teamId = team;
+    }
+
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
+    public Season players(Set<Player> players) {
+        this.players = players;
+        return this;
+    }
+
+    public Season addPlayers(Player player) {
+        this.players.add(player);
+        player.getSeasons().add(this);
+        return this;
+    }
+
+    public Season removePlayers(Player player) {
+        this.players.remove(player);
+        player.getSeasons().remove(this);
+        return this;
+    }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -101,8 +132,8 @@ public class Season implements Serializable {
     public String toString() {
         return "Season{" +
             "id=" + getId() +
-            ", debut='" + getDebut() + "'" +
-            ", fin='" + getFin() + "'" +
+            ", start='" + getStart() + "'" +
+            ", end='" + getEnd() + "'" +
             "}";
     }
 }

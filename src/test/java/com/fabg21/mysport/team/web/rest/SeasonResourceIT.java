@@ -10,9 +10,12 @@ import com.fabg21.mysport.team.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -24,11 +27,13 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.fabg21.mysport.team.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -38,17 +43,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MySportTeamApp.class)
 public class SeasonResourceIT {
 
-    private static final LocalDate DEFAULT_DEBUT = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DEBUT = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate DEFAULT_START = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_START = LocalDate.now(ZoneId.systemDefault());
 
-    private static final LocalDate DEFAULT_FIN = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FIN = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate DEFAULT_END = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_END = LocalDate.now(ZoneId.systemDefault());
 
     @Autowired
     private SeasonRepository seasonRepository;
 
+    @Mock
+    private SeasonRepository seasonRepositoryMock;
+
     @Autowired
     private SeasonMapper seasonMapper;
+
+    @Mock
+    private SeasonService seasonServiceMock;
 
     @Autowired
     private SeasonService seasonService;
@@ -92,8 +103,8 @@ public class SeasonResourceIT {
      */
     public static Season createEntity(EntityManager em) {
         Season season = new Season()
-            .debut(DEFAULT_DEBUT)
-            .fin(DEFAULT_FIN);
+            .start(DEFAULT_START)
+            .end(DEFAULT_END);
         return season;
     }
     /**
@@ -104,8 +115,8 @@ public class SeasonResourceIT {
      */
     public static Season createUpdatedEntity(EntityManager em) {
         Season season = new Season()
-            .debut(UPDATED_DEBUT)
-            .fin(UPDATED_FIN);
+            .start(UPDATED_START)
+            .end(UPDATED_END);
         return season;
     }
 
@@ -130,8 +141,8 @@ public class SeasonResourceIT {
         List<Season> seasonList = seasonRepository.findAll();
         assertThat(seasonList).hasSize(databaseSizeBeforeCreate + 1);
         Season testSeason = seasonList.get(seasonList.size() - 1);
-        assertThat(testSeason.getDebut()).isEqualTo(DEFAULT_DEBUT);
-        assertThat(testSeason.getFin()).isEqualTo(DEFAULT_FIN);
+        assertThat(testSeason.getStart()).isEqualTo(DEFAULT_START);
+        assertThat(testSeason.getEnd()).isEqualTo(DEFAULT_END);
     }
 
     @Test
@@ -157,44 +168,6 @@ public class SeasonResourceIT {
 
     @Test
     @Transactional
-    public void checkDebutIsRequired() throws Exception {
-        int databaseSizeBeforeTest = seasonRepository.findAll().size();
-        // set the field null
-        season.setDebut(null);
-
-        // Create the Season, which fails.
-        SeasonDTO seasonDTO = seasonMapper.toDto(season);
-
-        restSeasonMockMvc.perform(post("/api/seasons")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(seasonDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Season> seasonList = seasonRepository.findAll();
-        assertThat(seasonList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkFinIsRequired() throws Exception {
-        int databaseSizeBeforeTest = seasonRepository.findAll().size();
-        // set the field null
-        season.setFin(null);
-
-        // Create the Season, which fails.
-        SeasonDTO seasonDTO = seasonMapper.toDto(season);
-
-        restSeasonMockMvc.perform(post("/api/seasons")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(seasonDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Season> seasonList = seasonRepository.findAll();
-        assertThat(seasonList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllSeasons() throws Exception {
         // Initialize the database
         seasonRepository.saveAndFlush(season);
@@ -204,10 +177,43 @@ public class SeasonResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(season.getId().intValue())))
-            .andExpect(jsonPath("$.[*].debut").value(hasItem(DEFAULT_DEBUT.toString())))
-            .andExpect(jsonPath("$.[*].fin").value(hasItem(DEFAULT_FIN.toString())));
+            .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())));
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void getAllSeasonsWithEagerRelationshipsIsEnabled() throws Exception {
+        SeasonResource seasonResource = new SeasonResource(seasonServiceMock);
+        when(seasonServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restSeasonMockMvc = MockMvcBuilders.standaloneSetup(seasonResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restSeasonMockMvc.perform(get("/api/seasons?eagerload=true"))
+        .andExpect(status().isOk());
+
+        verify(seasonServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllSeasonsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        SeasonResource seasonResource = new SeasonResource(seasonServiceMock);
+            when(seasonServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restSeasonMockMvc = MockMvcBuilders.standaloneSetup(seasonResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restSeasonMockMvc.perform(get("/api/seasons?eagerload=true"))
+        .andExpect(status().isOk());
+
+            verify(seasonServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getSeason() throws Exception {
@@ -219,8 +225,8 @@ public class SeasonResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(season.getId().intValue()))
-            .andExpect(jsonPath("$.debut").value(DEFAULT_DEBUT.toString()))
-            .andExpect(jsonPath("$.fin").value(DEFAULT_FIN.toString()));
+            .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
+            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()));
     }
 
     @Test
@@ -244,8 +250,8 @@ public class SeasonResourceIT {
         // Disconnect from session so that the updates on updatedSeason are not directly saved in db
         em.detach(updatedSeason);
         updatedSeason
-            .debut(UPDATED_DEBUT)
-            .fin(UPDATED_FIN);
+            .start(UPDATED_START)
+            .end(UPDATED_END);
         SeasonDTO seasonDTO = seasonMapper.toDto(updatedSeason);
 
         restSeasonMockMvc.perform(put("/api/seasons")
@@ -257,8 +263,8 @@ public class SeasonResourceIT {
         List<Season> seasonList = seasonRepository.findAll();
         assertThat(seasonList).hasSize(databaseSizeBeforeUpdate);
         Season testSeason = seasonList.get(seasonList.size() - 1);
-        assertThat(testSeason.getDebut()).isEqualTo(UPDATED_DEBUT);
-        assertThat(testSeason.getFin()).isEqualTo(UPDATED_FIN);
+        assertThat(testSeason.getStart()).isEqualTo(UPDATED_START);
+        assertThat(testSeason.getEnd()).isEqualTo(UPDATED_END);
     }
 
     @Test

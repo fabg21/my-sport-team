@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -47,7 +46,7 @@ public class SeasonResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/seasons")
-    public ResponseEntity<SeasonDTO> createSeason(@Valid @RequestBody SeasonDTO seasonDTO) throws URISyntaxException {
+    public ResponseEntity<SeasonDTO> createSeason(@RequestBody SeasonDTO seasonDTO) throws URISyntaxException {
         log.debug("REST request to save Season : {}", seasonDTO);
         if (seasonDTO.getId() != null) {
             throw new BadRequestAlertException("A new season cannot already have an ID", ENTITY_NAME, "idexists");
@@ -68,7 +67,7 @@ public class SeasonResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/seasons")
-    public ResponseEntity<SeasonDTO> updateSeason(@Valid @RequestBody SeasonDTO seasonDTO) throws URISyntaxException {
+    public ResponseEntity<SeasonDTO> updateSeason(@RequestBody SeasonDTO seasonDTO) throws URISyntaxException {
         log.debug("REST request to update Season : {}", seasonDTO);
         if (seasonDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -82,11 +81,11 @@ public class SeasonResource {
     /**
      * {@code GET  /seasons} : get all the seasons.
      *
-
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of seasons in body.
      */
     @GetMapping("/seasons")
-    public List<SeasonDTO> getAllSeasons() {
+    public List<SeasonDTO> getAllSeasons(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Seasons");
         return seasonService.findAll();
     }

@@ -14,5 +14,17 @@
                                  referencedColumnNames="id"
                                  referencedTableName="team"/>
 
+        <addForeignKeyConstraint baseColumnNames="season_id"
+                                 baseTableName="season_players"
+                                 constraintName="fk_season_players_season_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="season"/>
+
+        <addForeignKeyConstraint baseColumnNames="players_id"
+                                 baseTableName="season_players"
+                                 constraintName="fk_season_players_players_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="player"/>
+        
     </changeSet>
 </databaseChangeLog>

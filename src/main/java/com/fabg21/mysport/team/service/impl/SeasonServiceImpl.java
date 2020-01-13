@@ -8,6 +8,8 @@ import com.fabg21.mysport.team.service.mapper.SeasonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,11 +59,20 @@ public class SeasonServiceImpl implements SeasonService {
     @Transactional(readOnly = true)
     public List<SeasonDTO> findAll() {
         log.debug("Request to get all Seasons");
-        return seasonRepository.findAll().stream()
+        return seasonRepository.findAllWithEagerRelationships().stream()
             .map(seasonMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
+    /**
+     * Get all the seasons with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Page<SeasonDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return seasonRepository.findAllWithEagerRelationships(pageable).map(seasonMapper::toDto);
+    }
+    
 
     /**
      * Get one season by id.
@@ -73,7 +84,7 @@ public class SeasonServiceImpl implements SeasonService {
     @Transactional(readOnly = true)
     public Optional<SeasonDTO> findOne(Long id) {
         log.debug("Request to get Season : {}", id);
-        return seasonRepository.findById(id)
+        return seasonRepository.findOneWithEagerRelationships(id)
             .map(seasonMapper::toDto);
     }
 

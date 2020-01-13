@@ -6,23 +6,26 @@
             "relationshipName": "teamId",
             "otherEntityName": "team",
             "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "season"
+        },
+        {
+            "relationshipName": "players",
+            "otherEntityName": "player",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "seasons"
         }
     ],
     "fields": [
         {
-            "fieldName": "debut",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldName": "start",
+            "fieldType": "LocalDate"
         },
         {
-            "fieldName": "fin",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldName": "end",
+            "fieldType": "LocalDate"
         }
     ],
     "changelogDate": "20200107094127",

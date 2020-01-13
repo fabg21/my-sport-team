@@ -8,13 +8,14 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Season} and its DTO {@link SeasonDTO}.
  */
-@Mapper(componentModel = "spring", uses = {TeamMapper.class})
+@Mapper(componentModel = "spring", uses = {TeamMapper.class, PlayerMapper.class})
 public interface SeasonMapper extends EntityMapper<SeasonDTO, Season> {
 
     @Mapping(source = "teamId.id", target = "teamIdId")
     SeasonDTO toDto(Season season);
 
     @Mapping(source = "teamIdId", target = "teamId")
+    @Mapping(target = "removePlayers", ignore = true)
     Season toEntity(SeasonDTO seasonDTO);
 
     default Season fromId(Long id) {
