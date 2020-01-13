@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.fabg21.mysport.team",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.5.1",
+    "applicationType": "microservice",
+    "baseName": "mySportTeam",
+    "packageName": "com.fabg21.mysport.team",
+    "packageFolder": "com/fabg21/mysport/team",
+    "serverPort": "8084",
+    "authenticationType": "jwt",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NmNhMTg1MGU0NjBiMmFkNjdkNzBmMTEyZDljYWM1ZjY3OGUyMDBlNTMwNDliY2U5OTI1MGZjN2MzOWNlMjYzOGEwMDFmOTU0MDMxOGNjZDhkNWJmMGYxNmI3ODQ0ZjA3MmRmODdiZTM0NDc0NmJlM2ViNWU0ZGU2MThmZTU5ZjI=",
+    "embeddableLaunchScript": false,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "en",
+    "languages": [
+      "en",
+      "fr"
+    ],
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
