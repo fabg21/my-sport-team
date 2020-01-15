@@ -16,6 +16,8 @@ public class SeasonDTO implements Serializable {
 
     private LocalDate end;
 
+    private Boolean current;
+
 
     private Long teamIdId;
 
@@ -43,6 +45,14 @@ public class SeasonDTO implements Serializable {
 
     public void setEnd(LocalDate end) {
         this.end = end;
+    }
+
+    public Boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Boolean current) {
+        this.current = current;
     }
 
     public Long getTeamIdId() {
@@ -88,6 +98,7 @@ public class SeasonDTO implements Serializable {
             "id=" + getId() +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
+            ", current='" + isCurrent() + "'" +
             ", teamId=" + getTeamIdId() +
             "}";
     }

@@ -26,6 +26,10 @@
         {
             "fieldName": "end",
             "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "current",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20200107094127",

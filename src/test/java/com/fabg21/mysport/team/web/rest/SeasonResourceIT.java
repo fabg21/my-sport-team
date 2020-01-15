@@ -49,6 +49,9 @@ public class SeasonResourceIT {
     private static final LocalDate DEFAULT_END = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_END = LocalDate.now(ZoneId.systemDefault());
 
+    private static final Boolean DEFAULT_CURRENT = false;
+    private static final Boolean UPDATED_CURRENT = true;
+
     @Autowired
     private SeasonRepository seasonRepository;
 
@@ -104,7 +107,8 @@ public class SeasonResourceIT {
     public static Season createEntity(EntityManager em) {
         Season season = new Season()
             .start(DEFAULT_START)
-            .end(DEFAULT_END);
+            .end(DEFAULT_END)
+            .current(DEFAULT_CURRENT);
         return season;
     }
     /**
@@ -116,7 +120,8 @@ public class SeasonResourceIT {
     public static Season createUpdatedEntity(EntityManager em) {
         Season season = new Season()
             .start(UPDATED_START)
-            .end(UPDATED_END);
+            .end(UPDATED_END)
+            .current(UPDATED_CURRENT);
         return season;
     }
 
@@ -143,6 +148,7 @@ public class SeasonResourceIT {
         Season testSeason = seasonList.get(seasonList.size() - 1);
         assertThat(testSeason.getStart()).isEqualTo(DEFAULT_START);
         assertThat(testSeason.getEnd()).isEqualTo(DEFAULT_END);
+        assertThat(testSeason.isCurrent()).isEqualTo(DEFAULT_CURRENT);
     }
 
     @Test
@@ -178,7 +184,8 @@ public class SeasonResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(season.getId().intValue())))
             .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
-            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())));
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
+            .andExpect(jsonPath("$.[*].current").value(hasItem(DEFAULT_CURRENT.booleanValue())));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -226,7 +233,8 @@ public class SeasonResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(season.getId().intValue()))
             .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
-            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()));
+            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()))
+            .andExpect(jsonPath("$.current").value(DEFAULT_CURRENT.booleanValue()));
     }
 
     @Test
@@ -251,7 +259,8 @@ public class SeasonResourceIT {
         em.detach(updatedSeason);
         updatedSeason
             .start(UPDATED_START)
-            .end(UPDATED_END);
+            .end(UPDATED_END)
+            .current(UPDATED_CURRENT);
         SeasonDTO seasonDTO = seasonMapper.toDto(updatedSeason);
 
         restSeasonMockMvc.perform(put("/api/seasons")
@@ -265,6 +274,7 @@ public class SeasonResourceIT {
         Season testSeason = seasonList.get(seasonList.size() - 1);
         assertThat(testSeason.getStart()).isEqualTo(UPDATED_START);
         assertThat(testSeason.getEnd()).isEqualTo(UPDATED_END);
+        assertThat(testSeason.isCurrent()).isEqualTo(UPDATED_CURRENT);
     }
 
     @Test

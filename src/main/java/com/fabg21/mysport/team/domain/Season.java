@@ -28,6 +28,9 @@ public class Season implements Serializable {
     @Column(name = "jhi_end")
     private LocalDate end;
 
+    @Column(name = "current")
+    private Boolean current;
+
     @ManyToOne
     @JsonIgnoreProperties("seasons")
     private Team teamId;
@@ -71,6 +74,19 @@ public class Season implements Serializable {
 
     public void setEnd(LocalDate end) {
         this.end = end;
+    }
+
+    public Boolean isCurrent() {
+        return current;
+    }
+
+    public Season current(Boolean current) {
+        this.current = current;
+        return this;
+    }
+
+    public void setCurrent(Boolean current) {
+        this.current = current;
     }
 
     public Team getTeamId() {
@@ -134,6 +150,7 @@ public class Season implements Serializable {
             "id=" + getId() +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
+            ", current='" + isCurrent() + "'" +
             "}";
     }
 }
