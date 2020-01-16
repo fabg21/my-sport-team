@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Service Implementation for managing {@link Season}.
@@ -73,6 +74,21 @@ public class SeasonServiceImpl implements SeasonService {
         return seasonRepository.findAllWithEagerRelationships(pageable).map(seasonMapper::toDto);
     }
     
+
+
+    /**
+    *  Get all the seasons where Calendar is {@code null}.
+     *  @return the list of entities.
+     */
+    @Transactional(readOnly = true) 
+    public List<SeasonDTO> findAllWhereCalendarIsNull() {
+        log.debug("Request to get all seasons where Calendar is null");
+        return StreamSupport
+            .stream(seasonRepository.findAll().spliterator(), false)
+            .filter(season -> season.getCalendar() == null)
+            .map(seasonMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
 
     /**
      * Get one season by id.

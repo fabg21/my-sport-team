@@ -1,0 +1,31 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "mySportTeam",
+    "relationships": [
+        {
+            "relationshipName": "matchs",
+            "otherEntityName": "match",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "calendar"
+        },
+        {
+            "relationshipName": "season",
+            "otherEntityName": "season",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "useJPADerivedIdentifier": true,
+            "otherEntityRelationshipName": "calendar"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20200116075056",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "calendar",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no",
+    "microserviceName": "mySportTeam"
+}

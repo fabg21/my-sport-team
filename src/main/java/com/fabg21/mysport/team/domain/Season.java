@@ -1,4 +1,5 @@
 package com.fabg21.mysport.team.domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -40,6 +41,10 @@ public class Season implements Serializable {
                joinColumns = @JoinColumn(name = "season_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "players_id", referencedColumnName = "id"))
     private Set<Player> players = new HashSet<>();
+
+    @OneToOne(mappedBy = "season")
+    @JsonIgnore
+    private Calendar calendar;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -125,6 +130,19 @@ public class Season implements Serializable {
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public Season calendar(Calendar calendar) {
+        this.calendar = calendar;
+        return this;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

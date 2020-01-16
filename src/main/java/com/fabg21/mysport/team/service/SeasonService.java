@@ -27,6 +27,12 @@ public interface SeasonService {
      * @return the list of entities.
      */
     List<SeasonDTO> findAll();
+    /**
+     * Get all the SeasonDTO where Calendar is {@code null}.
+     *
+     * @return the list of entities.
+     */
+    List<SeasonDTO> findAllWhereCalendarIsNull();
 
     /**
      * Get all the seasons with eager load of many-to-many relationships.

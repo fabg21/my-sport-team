@@ -16,6 +16,7 @@ public interface SeasonMapper extends EntityMapper<SeasonDTO, Season> {
 
     @Mapping(source = "teamIdId", target = "teamId")
     @Mapping(target = "removePlayers", ignore = true)
+    @Mapping(target = "calendar", ignore = true)
     Season toEntity(SeasonDTO seasonDTO);
 
     default Season fromId(Long id) {

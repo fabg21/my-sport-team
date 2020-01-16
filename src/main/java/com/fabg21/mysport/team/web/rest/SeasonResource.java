@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link com.fabg21.mysport.team.domain.Season}.
@@ -82,10 +83,15 @@ public class SeasonResource {
      * {@code GET  /seasons} : get all the seasons.
      *
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of seasons in body.
      */
     @GetMapping("/seasons")
-    public List<SeasonDTO> getAllSeasons(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public List<SeasonDTO> getAllSeasons(@RequestParam(required = false) String filter,@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+        if ("calendar-is-null".equals(filter)) {
+            log.debug("REST request to get all Seasons where calendar is null");
+            return seasonService.findAllWhereCalendarIsNull();
+        }
         log.debug("REST request to get all Seasons");
         return seasonService.findAll();
     }
