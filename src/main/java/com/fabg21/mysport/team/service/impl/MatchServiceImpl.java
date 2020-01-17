@@ -87,4 +87,12 @@ public class MatchServiceImpl implements MatchService {
         log.debug("Request to delete Match : {}", id);
         matchRepository.deleteById(id);
     }
+
+    @Override
+    public List<MatchDTO> findAllFromSeason(Long seasonId) {
+        log.debug("Request to get all Matches from a season : {}", seasonId);
+        return matchRepository.findAllFromSeason(seasonId).stream()
+            .map(matchMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
 }

@@ -116,4 +116,15 @@ public class MatchResource {
         matchService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * {@code GET  /matchesFromSeason} : get all the matches from a specific season.
+     * @param seasonId the id of the selected season
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of matches in body.
+     */
+    @GetMapping("/matchesFromSeason")
+    public List<MatchDTO> getAllMatchesFromSeason(@PathVariable Long seasonId) {
+        log.debug("REST request to get all Matches from a season");
+        return matchService.findAllFromSeason(seasonId);
+    }
 }

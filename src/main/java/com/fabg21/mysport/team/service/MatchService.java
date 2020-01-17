@@ -40,4 +40,11 @@ public interface MatchService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get all the matches from a specific season.
+     * @param seasonId
+     * @return the list of entities.
+     */
+    List<MatchDTO> findAllFromSeason(Long seasonId);
 }
