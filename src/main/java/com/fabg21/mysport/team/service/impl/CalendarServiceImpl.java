@@ -93,4 +93,11 @@ public class CalendarServiceImpl implements CalendarService {
         log.debug("Request to delete Calendar : {}", id);
         calendarRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<CalendarDTO> findOneFromSeason(Long seasonId) {
+        log.debug("Request to get Calendar from season : {}", seasonId);
+        return calendarRepository.findBySeasonIdWithMatches(seasonId)
+            .map(calendarMapper::toDto);
+    }
 }

@@ -40,4 +40,12 @@ public interface CalendarService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get the calendar corresponding to the season "seasonId".
+     *
+     * @param seasonId the id of the season.
+     * @return the entity.
+     */
+    Optional<CalendarDTO> findOneFromSeason(Long seasonId);
 }

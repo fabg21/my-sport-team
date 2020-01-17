@@ -1,6 +1,8 @@
 package com.fabg21.mysport.team.service.dto;
+
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.fabg21.mysport.team.domain.Calendar} entity.
@@ -9,8 +11,9 @@ public class CalendarDTO implements Serializable {
 
     private Long id;
 
-
     private Long seasonId;
+
+    private Set<MatchDTO> matchs;
 
     public Long getId() {
         return id;
@@ -27,6 +30,10 @@ public class CalendarDTO implements Serializable {
     public void setSeasonId(Long seasonId) {
         this.seasonId = seasonId;
     }
+
+    public Set<MatchDTO> getMatchs() { return matchs; }
+
+    public void setMatchs(Set<MatchDTO> matchs) { this.matchs = matchs; }
 
     @Override
     public boolean equals(Object o) {

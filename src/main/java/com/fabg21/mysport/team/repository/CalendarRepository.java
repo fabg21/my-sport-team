@@ -1,7 +1,12 @@
 package com.fabg21.mysport.team.repository;
+
 import com.fabg21.mysport.team.domain.Calendar;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 
 /**
@@ -11,4 +16,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
+    /**
+     * Find the calendar from a specific season with all the matches
+     * @param seasonId
+     * @return
+     */
+    @Query("SELECT cal FROM Calendar cal LEFT JOIN cal.season sea LEFT JOIN FETCH cal.matchs sea WHERE sea.id =(:pSeasonId)")
+    Optional<Calendar> findBySeasonIdWithMatches(@Param("pSeasonId") Long seasonId);
 }

@@ -119,4 +119,17 @@ public class CalendarResource {
         calendarService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * {@code GET  /calendarFromSeason/:id} : get the "id" season.
+     *
+     * @param id the id of the season.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the calendarDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/calendarFromSeason/{id}")
+    public ResponseEntity<CalendarDTO> getCalendarFromSeason(@PathVariable Long id) {
+        log.debug("REST request to get Calendar from season : {}", id);
+        Optional<CalendarDTO> calendarDTO = calendarService.findOneFromSeason(id);
+        return ResponseUtil.wrapOrNotFound(calendarDTO);
+    }
 }
