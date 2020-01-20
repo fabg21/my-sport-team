@@ -21,6 +21,7 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long> {
      * @param seasonId
      * @return
      */
-    @Query("SELECT cal FROM Calendar cal LEFT JOIN cal.season sea LEFT JOIN FETCH cal.matchs sea WHERE sea.id =(:pSeasonId)")
+    @Query("SELECT cal FROM Calendar cal LEFT JOIN cal.season sea LEFT JOIN FETCH cal.matchs mat " +
+        "LEFT JOIN FETCH mat.opponent WHERE sea.id =(:pSeasonId)")
     Optional<Calendar> findBySeasonIdWithMatches(@Param("pSeasonId") Long seasonId);
 }

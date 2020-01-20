@@ -8,10 +8,11 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Calendar} and its DTO {@link CalendarDTO}.
  */
-@Mapper(componentModel = "spring", uses = {SeasonMapper.class})
+@Mapper(componentModel = "spring", uses = {SeasonMapper.class, MatchMapper.class})
 public interface CalendarMapper extends EntityMapper<CalendarDTO, Calendar> {
 
     @Mapping(source = "season.id", target = "seasonId")
+    @Mapping(source = "matchs", target = "matchs")
     CalendarDTO toDto(Calendar calendar);
 
     @Mapping(target = "matchs", ignore = true)

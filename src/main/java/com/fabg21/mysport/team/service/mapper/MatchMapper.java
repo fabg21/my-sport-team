@@ -5,6 +5,9 @@ import com.fabg21.mysport.team.service.dto.MatchDTO;
 
 import org.mapstruct.*;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Mapper for the entity {@link Match} and its DTO {@link MatchDTO}.
  */
@@ -18,6 +21,8 @@ public interface MatchMapper extends EntityMapper<MatchDTO, Match> {
     @Mapping(source = "opponentId", target = "opponent")
     @Mapping(source = "calendarId", target = "calendar")
     Match toEntity(MatchDTO matchDTO);
+
+    List<MatchDTO> toDto(List<Match> entityList);
 
     default Match fromId(Long id) {
         if (id == null) {
